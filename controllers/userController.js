@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
+import Run from "../models/Run.js";
 
 // REGISTER
 export async function register(req, res) {
@@ -108,17 +109,25 @@ export async function resetPassword(req, res) {
 export async function updateUserName(req, res) {
   try {
     const { userName } = req.body;
+
     if (!userName || userName.trim().length < 3) {
       return res.status(400).json({ message: "Username must be at least 3 characters" });
     }
 
+    const cleanName = userName.trim();
+
     const user = await User.findById(req.user.userId);
     if (!user) return res.status(404).json({ message: "User Not Found" });
 
-    user.userName = userName.trim();
+    user.userName = cleanName;
     await user.save();
 
-    // Optional: return updated user data (frontend updates UI immediately)
+    // update username in all previous runs too
+    await Run.updateMany(
+      { userId: user._id },
+      { $set: { userName: cleanName } }
+    );
+
     res.status(200).json({
       message: "Username updated",
       user: {

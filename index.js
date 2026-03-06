@@ -5,7 +5,6 @@ import "dotenv/config";
 import cookieParser from "cookie-parser";
 
 import userRoutes from "./routers/userRoutes.js";
-import authRoutes from "./routers/authRoutes.js";
 import gameRoutes from "./routers/gameRoutes.js";
 
 const app = express();
@@ -23,7 +22,6 @@ app.use(
 app.get("/", (req, res) => res.send("API running"));
 
 app.use("/api/users", userRoutes);
-app.use("/api/auth", authRoutes);
 app.use("/api/game", gameRoutes);
 
 mongoose
