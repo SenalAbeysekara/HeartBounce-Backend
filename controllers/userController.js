@@ -3,13 +3,16 @@ import bcrypt from "bcrypt";
 import User from "../models/User.js";
 import Run from "../models/Run.js";
 
-// Creates a new user account
 export async function register(req, res) {
   try {
     const { email, userName, password } = req.body;
 
     if (!email || !userName || !password) {
       return res.status(400).json({ message: "Missing fields" });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
     }
 
     const exists = await User.findOne({ email });
@@ -26,7 +29,6 @@ export async function register(req, res) {
   }
 }
 
-// Logs a user in and stores JWT in a cookie
 export async function login(req, res) {
   try {
     const { email, password, rememberMe } = req.body;
@@ -63,23 +65,20 @@ export async function login(req, res) {
   }
 }
 
-// Returns the currently logged-in user
 export async function me(req, res) {
   res.status(200).json({ user: req.user });
 }
 
-// Clears the auth cookie to log the user out
 export async function logout(req, res) {
   res.clearCookie("auth_token", {
     httpOnly: true,
     sameSite: "Lax",
-    secure: false,
+    secure: false, 
   });
 
   res.status(200).json({ message: "Logged out" });
 }
 
-// Changes password after verifying the current one
 export async function resetPassword(req, res) {
   try {
     const { email, currentPassword, newPassword } = req.body;
@@ -107,14 +106,9 @@ export async function resetPassword(req, res) {
   }
 }
 
-// Updates username in both user profile and saved runs
 export async function updateUserName(req, res) {
   try {
     const { userName } = req.body;
-
-    if (!userName || userName.trim().length < 3) {
-      return res.status(400).json({ message: "Username must be at least 3 characters" });
-    }
 
     const cleanName = userName.trim();
 

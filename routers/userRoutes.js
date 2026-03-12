@@ -11,16 +11,14 @@ import {
 
 const router = express.Router();
 
-// Public routes
 router.post("/register", register);
 router.post("/login", login);
-router.post("/reset-password", resetPassword);
 
-// Everything below requires auth
 router.use(authenticate);
 
 router.post("/logout", logout);
 router.get("/me", me);
 router.put("/username", updateUserName);
+router.post("/reset-password", resetPassword);
 
 export default router;

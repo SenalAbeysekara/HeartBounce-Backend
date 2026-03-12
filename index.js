@@ -11,11 +11,10 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// Allows frontend requests and cookies
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN,
-    credentials: true,
+    origin: "http://localhost:5173",
+    credentials: true, 
   })
 );
 

@@ -2,7 +2,6 @@ import axios from "axios";
 import Run from "../models/Run.js";
 import mongoose from "mongoose";
 
-// Fetches a new heart puzzle from the external API
 export async function getNewHeart(req, res) {
   try {
     const url = "https://marcconrad.com/uob/heart/api.php?out=json&base64=no";
@@ -13,7 +12,6 @@ export async function getNewHeart(req, res) {
   }
 }
 
-// Saves a completed run for the logged-in user
 export async function submitRun(req, res) {
   try {
     const { score, difficulty } = req.body;
@@ -23,7 +21,7 @@ export async function submitRun(req, res) {
     }
 
     const run = await Run.create({
-      userId: req.user.userId || req.user.id || req.user._id,
+      userId: req.user.userId,
       userName: req.user.userName,
       userImage: req.user.image,
       score,
@@ -36,7 +34,6 @@ export async function submitRun(req, res) {
   }
 }
 
-// Returns the current user's recent runs
 export async function myRuns(req, res) {
   try {
     const runs = await Run.find({ userId: req.user.userId })
@@ -50,7 +47,6 @@ export async function myRuns(req, res) {
   }
 }
 
-// Builds leaderboard using each user's best score
 export async function leaderboard(req, res) {
   try {
     const top = await Run.aggregate([
@@ -76,10 +72,9 @@ export async function leaderboard(req, res) {
   }
 }
 
-// Returns run stats grouped by difficulty for the current user
 export async function profileStats(req, res) {
   try {
-    const uid = req.user.userId || req.user.id || req.user._id;
+    const uid = req.user.userId;
 
     const rows = await Run.aggregate([
       { $match: { userId: new mongoose.Types.ObjectId(uid) } },

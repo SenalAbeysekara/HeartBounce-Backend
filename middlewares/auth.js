@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 
-// Verifies JWT from cookie and attaches user data to the request
 export function authenticate(req, res, next) {
   const token = req.cookies.auth_token;
   if (!token) return res.status(401).json({ message: "No token" });

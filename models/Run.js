@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// Stores one completed game run
 const runSchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
