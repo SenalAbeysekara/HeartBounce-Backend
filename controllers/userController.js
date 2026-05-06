@@ -52,8 +52,8 @@ export async function login(req, res) {
 
     res.cookie("auth_token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
+      secure: true,      // ← changed from false
+      sameSite: "none",  // ← changed from "Lax"
       expires: new Date(
         Date.now() + (rememberMe ? 30 * 24 * 60 * 60 * 1000 : 48 * 60 * 60 * 1000)
       ),
@@ -72,8 +72,8 @@ export async function me(req, res) {
 export async function logout(req, res) {
   res.clearCookie("auth_token", {
     httpOnly: true,
-    sameSite: "Lax",
-    secure: false, 
+    secure: true,      // ← change from false
+    sameSite: "none",  // ← change from "Lax"
   });
 
   res.status(200).json({ message: "Logged out" });
